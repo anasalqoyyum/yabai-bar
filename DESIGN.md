@@ -60,7 +60,7 @@ components:
 
 Yabai Bar should look like a compact macOS control that has always belonged in the menu bar. Its identity comes from precise state communication and restraint. System appearance, typography, controls, and accessibility behavior take priority over decorative branding.
 
-The workspace strip is the signature component. Focus uses a filled rounded selection, visibility on another display uses a small dot, and unavailable state uses muted text plus an exclamation mark. Settings remain a conventional native utility window.
+The workspace strip is the signature component. Focus uses a filled rounded selection, occupancy uses a small dot below the label, visibility on another display uses a small dot above the label, and unavailable state uses muted text plus an exclamation mark. Settings remain a conventional native utility window.
 
 **Key Characteristics:**
 
@@ -119,7 +119,7 @@ The menu-bar surface is flat. State uses system fills and text changes, not shad
 
 ## Shapes
 
-The focused workspace and pressed overlay use gently rounded 6-point corners. The visible-on-another-display cue is a 3-point circular dot. Underline style uses a 2-point rounded rule. Pills are reserved for the compact active workspace control.
+The focused workspace and pressed overlay use gently rounded 6-point corners. Occupancy and visible-on-another-display cues use 3-point circular dots on opposite sides of the label. Underline style uses a 2-point rounded rule. Pills are reserved for the compact active workspace control.
 
 ## Components
 
@@ -128,7 +128,8 @@ The focused workspace and pressed overlay use gently rounded 6-point corners. Th
 - **Shape:** A compact rectangular hit target with a 6-point focused pill.
 - **Default:** System label text on the transparent menu-bar surface.
 - **Focused:** System selected-content fill and selected menu-item text.
-- **Visible elsewhere:** A small secondary-label dot below the label when the space is visible but not focused.
+- **Visible elsewhere:** A small secondary-label dot above the label when the space is visible but not focused.
+- **Occupied:** A small secondary-label dot below the label when yabai reports one or more windows in the space.
 - **Pressed / Focus:** A semantic label-color overlay is drawn above the selected pill; the native focus ring remains enabled.
 - **Unavailable:** Buttons stop accepting focus commands and use the disabled-control text color when yabai is disconnected.
 - **Capability-limited:** Buttons become inert without changing appearance when the current macOS and yabai combination cannot focus spaces.

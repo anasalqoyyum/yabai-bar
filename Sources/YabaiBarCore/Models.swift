@@ -10,6 +10,8 @@ public struct YabaiSpace: Codable, Identifiable, Equatable, Sendable {
     public let isNativeFullscreen: Bool
     public let windows: [Int]
 
+    public var isOccupied: Bool { !windows.isEmpty }
+
     public init(
         id: UInt64,
         index: Int,

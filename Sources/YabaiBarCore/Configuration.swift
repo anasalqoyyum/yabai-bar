@@ -37,6 +37,7 @@ public struct AppConfiguration: Codable, Equatable, Sendable {
     public var activeStyle: ActiveIndicatorStyle
     public var showVisibleSpaces: Bool
     public var showEmptySpaces: Bool
+    public var showOccupiedIndicators: Bool
     public var launchAtLogin: Bool
     public var spacing: SpaceSpacing
     public var font: BarFont
@@ -47,6 +48,7 @@ public struct AppConfiguration: Codable, Equatable, Sendable {
         activeStyle: ActiveIndicatorStyle = .pill,
         showVisibleSpaces: Bool = true,
         showEmptySpaces: Bool = true,
+        showOccupiedIndicators: Bool = true,
         launchAtLogin: Bool = true,
         spacing: SpaceSpacing = .regular,
         font: BarFont = .system
@@ -56,6 +58,7 @@ public struct AppConfiguration: Codable, Equatable, Sendable {
         self.activeStyle = activeStyle
         self.showVisibleSpaces = showVisibleSpaces
         self.showEmptySpaces = showEmptySpaces
+        self.showOccupiedIndicators = showOccupiedIndicators
         self.launchAtLogin = launchAtLogin
         self.spacing = spacing
         self.font = font
@@ -74,12 +77,12 @@ public struct AppConfiguration: Codable, Equatable, Sendable {
 
     public func displayedSpaces(from spaces: [YabaiSpace]) -> [YabaiSpace] {
         spaces
-            .filter { showEmptySpaces || !$0.windows.isEmpty || $0.hasFocus || $0.isVisible }
+            .filter { showEmptySpaces || $0.isOccupied || $0.hasFocus || $0.isVisible }
             .sorted { $0.index < $1.index }
     }
 
     enum CodingKeys: String, CodingKey {
-        case yabaiPath, spaceDisplay, activeStyle, showVisibleSpaces, showEmptySpaces
+        case yabaiPath, spaceDisplay, activeStyle, showVisibleSpaces, showEmptySpaces, showOccupiedIndicators
         case launchAtLogin, spacing, font
     }
 
@@ -90,6 +93,7 @@ public struct AppConfiguration: Codable, Equatable, Sendable {
         activeStyle = try container.decodeIfPresent(ActiveIndicatorStyle.self, forKey: .activeStyle) ?? .pill
         showVisibleSpaces = try container.decodeIfPresent(Bool.self, forKey: .showVisibleSpaces) ?? true
         showEmptySpaces = try container.decodeIfPresent(Bool.self, forKey: .showEmptySpaces) ?? true
+        showOccupiedIndicators = try container.decodeIfPresent(Bool.self, forKey: .showOccupiedIndicators) ?? true
         launchAtLogin = try container.decodeIfPresent(Bool.self, forKey: .launchAtLogin) ?? true
         spacing = try container.decodeIfPresent(SpaceSpacing.self, forKey: .spacing) ?? .regular
         font = try container.decodeIfPresent(BarFont.self, forKey: .font) ?? .system

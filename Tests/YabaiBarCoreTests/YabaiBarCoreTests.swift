@@ -12,6 +12,7 @@ final class YabaiBarCoreTests: XCTestCase {
         XCTAssertTrue(spaces[2].isNativeFullscreen)
         XCTAssertEqual(spaces[2].display, 2)
         XCTAssertEqual(spaces[0].windows, [101, 102])
+        XCTAssertTrue(spaces[0].isOccupied)
     }
 
     func testDisplayModesAndEmptySpaceFiltering() {
@@ -89,6 +90,13 @@ final class YabaiBarCoreTests: XCTestCase {
         XCTAssertEqual(partial.spaceDisplay, .label)
         XCTAssertFalse(partial.showEmptySpaces)
         XCTAssertTrue(partial.showVisibleSpaces)
+        XCTAssertTrue(partial.showOccupiedIndicators)
+
+        let hiddenOccupiedIndicators = try JSONDecoder().decode(
+            AppConfiguration.self,
+            from: Data(#"{"showOccupiedIndicators":false}"#.utf8)
+        )
+        XCTAssertFalse(hiddenOccupiedIndicators.showOccupiedIndicators)
     }
 
     func testConfigurationWritesAtomicallyAndReloads() throws {

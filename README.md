@@ -62,6 +62,7 @@ The optional config file lives at `~/.config/yabai-bar/config.json`. Missing key
   "font": "system",
   "launchAtLogin": true,
   "showEmptySpaces": true,
+  "showOccupiedIndicators": true,
   "showVisibleSpaces": true,
   "spaceDisplay": "index",
   "spacing": "regular",

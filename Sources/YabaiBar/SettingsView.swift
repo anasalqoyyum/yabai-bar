@@ -110,6 +110,7 @@ private struct SettingsView: View {
                 Text("Underline").tag(ActiveIndicatorStyle.underline)
                 Text("Bold text").tag(ActiveIndicatorStyle.bold)
             }
+            Toggle("Show occupied indicators", isOn: $draft.showOccupiedIndicators)
             Picker("Spacing", selection: $draft.spacing) {
                 Text("Compact").tag(SpaceSpacing.compact)
                 Text("Regular").tag(SpaceSpacing.regular)

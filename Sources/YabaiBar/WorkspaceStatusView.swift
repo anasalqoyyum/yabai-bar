@@ -104,7 +104,8 @@ private final class WorkspaceButton: NSButton {
         focusRingType = .default
         toolTip = space.label.isEmpty ? "Space \(space.index)" : "Space \(space.index): \(space.label)"
         setAccessibilityLabel(toolTip)
-        setAccessibilityValue(space.hasFocus ? "Focused" : space.isVisible ? "Visible on another display" : "Not visible")
+        let visibility = space.hasFocus ? "Focused" : space.isVisible ? "Visible on another display" : "Not visible"
+        setAccessibilityValue("\(visibility), \(space.isOccupied ? "occupied" : "empty")")
     }
 
     required init?(coder: NSCoder) { nil }
@@ -150,6 +151,19 @@ private final class WorkspaceButton: NSButton {
         } else if configuration.showVisibleSpaces && space.isVisible && !space.hasFocus {
             NSColor.secondaryLabelColor.setFill()
             NSBezierPath(ovalIn: NSRect(x: bounds.midX + contentOffsetX - 1.5, y: 2, width: 3, height: 3)).fill()
+        }
+
+        if configuration.showOccupiedIndicators && space.isOccupied {
+            let color: NSColor = space.hasFocus && configuration.activeStyle == .pill
+                ? .controlAccentColor
+                : .secondaryLabelColor
+            color.setFill()
+            NSBezierPath(ovalIn: NSRect(
+                x: bounds.midX + contentOffsetX - 1.5,
+                y: bounds.height - 5,
+                width: 3,
+                height: 3
+            )).fill()
         }
     }
 
