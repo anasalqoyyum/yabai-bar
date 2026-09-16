@@ -153,11 +153,8 @@ private final class WorkspaceButton: NSButton {
             NSBezierPath(ovalIn: NSRect(x: bounds.midX + contentOffsetX - 1.5, y: 2, width: 3, height: 3)).fill()
         }
 
-        if configuration.showOccupiedIndicators && space.isOccupied {
-            let color: NSColor = space.hasFocus && configuration.activeStyle == .pill
-                ? .controlAccentColor
-                : .secondaryLabelColor
-            color.setFill()
+        if configuration.showOccupiedIndicators && space.isOccupied && !space.hasFocus {
+            NSColor.secondaryLabelColor.setFill()
             NSBezierPath(ovalIn: NSRect(
                 x: bounds.midX + contentOffsetX - 1.5,
                 y: bounds.height - 5,
