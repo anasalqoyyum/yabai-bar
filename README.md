@@ -2,6 +2,8 @@
 
 Yabai Bar is a native macOS menu-bar workspace indicator and mouse controller for [yabai](https://github.com/koekeishiya/yabai). It uses one status item for the full workspace group, keeps empty spaces visible by default, and sends focus requests back to yabai.
 
+![Yabai Bar with Pill, Underline, and Bold active-space styles](docs/yabai-bar-styles.png)
+
 ## Requirements
 
 - macOS 13 or newer
