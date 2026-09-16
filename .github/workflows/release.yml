@@ -29,7 +29,7 @@ jobs:
             echo "Skipping non-SemVer tag: $GITHUB_REF_NAME"
           fi
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         if: steps.semver.outputs.valid == 'true'
 
       - name: Test
@@ -54,7 +54,8 @@ jobs:
           lipo dist/YabaiBar.app/Contents/MacOS/YabaiBar -verify_arch x86_64
           lipo dist/YabaiBar.app/Contents/MacOS/yabai-barctl -verify_arch arm64
           lipo dist/YabaiBar.app/Contents/MacOS/yabai-barctl -verify_arch x86_64
-          shasum -a 256 "dist/YabaiBar-$VERSION.dmg" > "dist/YabaiBar-$VERSION.dmg.sha256"
+          cd dist
+          shasum -a 256 "YabaiBar-$VERSION.dmg" > "YabaiBar-$VERSION.dmg.sha256"
 
       - name: Publish GitHub release
         if: steps.semver.outputs.valid == 'true'
