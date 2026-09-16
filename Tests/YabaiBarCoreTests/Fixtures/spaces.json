@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "index": 1,
+    "label": "web",
+    "display": 1,
+    "has-focus": false,
+    "is-visible": true,
+    "is-native-fullscreen": false,
+    "windows": [101, 102]
+  },
+  {
+    "id": 2,
+    "index": 2,
+    "label": "code",
+    "display": 1,
+    "has-focus": true,
+    "is-visible": true,
+    "is-native-fullscreen": false,
+    "windows": []
+  },
+  {
+    "id": 3,
+    "index": 3,
+    "label": "",
+    "display": 2,
+    "has-focus": false,
+    "is-visible": true,
+    "is-native-fullscreen": true,
+    "windows": [201]
+  }
+]

@@ -1,0 +1,78 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-15
+    steps:
+      - name: Check semantic version tag
+        id: semver
+        shell: bash
+        run: |
+          tag=${GITHUB_REF_NAME#v}
+          core='(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)'
+          prerelease_id='(0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)'
+          build_id='[0-9A-Za-z-]+'
+          pattern="^$core(-$prerelease_id(\.$prerelease_id)*)?(\+$build_id(\.$build_id)*)?$"
+          if [[ $tag =~ $pattern ]]; then
+            echo "valid=true" >> "$GITHUB_OUTPUT"
+            echo "version=$tag" >> "$GITHUB_OUTPUT"
+          else
+            echo "valid=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping non-SemVer tag: $GITHUB_REF_NAME"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.semver.outputs.valid == 'true'
+
+      - name: Test
+        if: steps.semver.outputs.valid == 'true'
+        run: swift test -Xswiftc -warnings-as-errors
+
+      - name: Build universal DMG
+        if: steps.semver.outputs.valid == 'true'
+        env:
+          VERSION: ${{ steps.semver.outputs.version }}
+          BUILD_NUMBER: ${{ github.run_number }}
+          UNIVERSAL_BINARY: "1"
+        run: make dmg
+
+      - name: Verify package
+        if: steps.semver.outputs.valid == 'true'
+        env:
+          VERSION: ${{ steps.semver.outputs.version }}
+        run: |
+          codesign --verify --deep --strict --verbose=2 dist/YabaiBar.app
+          lipo dist/YabaiBar.app/Contents/MacOS/YabaiBar -verify_arch arm64
+          lipo dist/YabaiBar.app/Contents/MacOS/YabaiBar -verify_arch x86_64
+          lipo dist/YabaiBar.app/Contents/MacOS/yabai-barctl -verify_arch arm64
+          lipo dist/YabaiBar.app/Contents/MacOS/yabai-barctl -verify_arch x86_64
+          shasum -a 256 "dist/YabaiBar-$VERSION.dmg" > "dist/YabaiBar-$VERSION.dmg.sha256"
+
+      - name: Publish GitHub release
+        if: steps.semver.outputs.valid == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.semver.outputs.version }}
+        run: |
+          options=(
+            release create "$GITHUB_REF_NAME"
+            "dist/YabaiBar-$VERSION.dmg"
+            "dist/YabaiBar-$VERSION.dmg.sha256"
+            --verify-tag
+            --generate-notes
+            --title "Yabai Bar $VERSION"
+          )
+          version_without_build=${VERSION%%+*}
+          if [[ $version_without_build == *-* ]]; then
+            options+=(--prerelease)
+          fi
+          gh "${options[@]}"
