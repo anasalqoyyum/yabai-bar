@@ -8,7 +8,7 @@ enum ExitCode: Int32 {
 }
 
 @main
-enum YabaiBarCLI {
+enum YabaiBarCommand {
     static func main() {
         let arguments = Array(CommandLine.arguments.dropFirst())
         guard let command = parse(arguments) else {
