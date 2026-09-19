@@ -196,7 +196,11 @@ final class YabaiBarCoreTests: XCTestCase {
         await debouncer.schedule { await counter.increment() }
         await debouncer.schedule { await counter.increment() }
         await debouncer.schedule { await counter.increment() }
-        try await Task.sleep(for: .milliseconds(80))
+
+        let fired = await eventually { await counter.value >= 1 }
+        XCTAssertTrue(fired, "the debounced operation never ran")
+
+        try await Task.sleep(for: .milliseconds(200))
         let count = await counter.value
         XCTAssertEqual(count, 1)
     }
@@ -242,4 +246,13 @@ private actor FakeRunner: ProcessRunning {
 private actor Counter {
     private(set) var value = 0
     func increment() { value += 1 }
+}
+
+private func eventually(timeout: Duration = .seconds(5), _ condition: () async -> Bool) async -> Bool {
+    let deadline = ContinuousClock.now + timeout
+    while ContinuousClock.now < deadline {
+        if await condition() { return true }
+        try? await Task.sleep(for: .milliseconds(5))
+    }
+    return await condition()
 }
