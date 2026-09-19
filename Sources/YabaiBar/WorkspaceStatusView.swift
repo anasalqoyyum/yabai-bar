@@ -27,7 +27,7 @@ final class WorkspaceStatusView: NSView {
         buttons.removeAll()
         unavailableLabel = nil
 
-        var x: CGFloat = 4
+        var x: CGFloat = 0
         for space in spaces {
             let button = WorkspaceButton(
                 space: space,
@@ -46,10 +46,6 @@ final class WorkspaceStatusView: NSView {
             addSubview(button)
             buttons.append(button)
             x += size.width
-        }
-
-        if available, let lastButton = buttons.last {
-            x -= lastButton.trimTrailingEdge(by: 4)
         }
 
         if !available {
@@ -91,7 +87,6 @@ private final class WorkspaceButton: NSButton {
     var rightMouseHandler: ((NSEvent) -> Void)?
     private let configuration: AppConfiguration
     private let showsDisabledAppearance: Bool
-    private var contentOffsetX: CGFloat = 0
 
     init(space: YabaiSpace, configuration: AppConfiguration, showsDisabledAppearance: Bool) {
         self.space = space
@@ -138,7 +133,7 @@ private final class WorkspaceButton: NSButton {
         let paragraph = NSMutableParagraphStyle()
         paragraph.alignment = .center
         paragraph.lineBreakMode = .byTruncatingTail
-        let textRect = NSRect(x: contentOffsetX, y: 3, width: bounds.width, height: bounds.height - 4)
+        let textRect = NSRect(x: 0, y: 3, width: bounds.width, height: bounds.height - 4)
         (title as NSString).draw(in: textRect, withAttributes: [
             .font: displayFont,
             .foregroundColor: color,
@@ -147,28 +142,21 @@ private final class WorkspaceButton: NSButton {
 
         if space.hasFocus && configuration.activeStyle == .underline {
             NSColor.controlAccentColor.setFill()
-            NSBezierPath(roundedRect: NSRect(x: 7 + contentOffsetX, y: 2, width: max(4, bounds.width - 14), height: 2), xRadius: 1, yRadius: 1).fill()
+            NSBezierPath(roundedRect: NSRect(x: 7, y: 2, width: max(4, bounds.width - 14), height: 2), xRadius: 1, yRadius: 1).fill()
         } else if configuration.showVisibleSpaces && space.isVisible && !space.hasFocus {
             NSColor.secondaryLabelColor.setFill()
-            NSBezierPath(ovalIn: NSRect(x: bounds.midX + contentOffsetX - 1.5, y: 2, width: 3, height: 3)).fill()
+            NSBezierPath(ovalIn: NSRect(x: bounds.midX - 1.5, y: 2, width: 3, height: 3)).fill()
         }
 
         if configuration.showOccupiedIndicators && space.isOccupied && !space.hasFocus {
             NSColor.secondaryLabelColor.setFill()
             NSBezierPath(ovalIn: NSRect(
-                x: bounds.midX + contentOffsetX - 1.5,
+                x: bounds.midX - 1.5,
                 y: bounds.height - 5,
                 width: 3,
                 height: 3
             )).fill()
         }
-    }
-
-    func trimTrailingEdge(by amount: CGFloat) -> CGFloat {
-        let trim = min(amount, frame.width)
-        frame.size.width -= trim
-        contentOffsetX = trim / 2
-        return trim
     }
 
     override func rightMouseDown(with event: NSEvent) {

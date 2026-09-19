@@ -107,7 +107,7 @@ The app icon uses a graphite-blue macOS squircle with a white lowercase `y`. The
 
 ## Layout
 
-The full workspace group occupies one variable-length `NSStatusItem`. Each label is an independent button within that item. Internal horizontal spacing is configurable at 4, 7, or 10 points, with 7 points as the default, plus a fixed 4-point hit-area inset on each side. The final button trims that fixed trailing inset because macOS supplies the spacing between menu-bar items. Label text is capped at 96 points and truncates at the tail so a long yabai label cannot consume the menu bar.
+The full workspace group occupies one variable-length `NSStatusItem`. Each label is an independent button within that item. Internal horizontal spacing is configurable at 4, 7, or 10 points, with 7 points as the default, plus a fixed 4-point hit-area inset on each side. Every label keeps that inset, so the group is exactly as wide as its labels and the focused pill sits the same distance from every label's edges. Label text is capped at 96 points and truncates at the tail so a long yabai label cannot consume the menu bar.
 
 Settings use a 540 by 390 point window with General, Appearance, and Diagnostics tabs. Native grouped forms determine field alignment and density.
 
